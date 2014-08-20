@@ -3,7 +3,7 @@
 // Pins:
 #define CW_LIMIT 4
 #define CCW_LIMIT 5
-#define SWITCH_ENABLE 3
+#define KILL_SWITCH 3
 #define GO_BUTTON 2
 
 // Constants:
@@ -51,7 +51,7 @@ void setup()
   // Setup the input pins
   pinMode(CW_LIMIT, INPUT);
   pinMode(CCW_LIMIT, INPUT);
-  pinMode(SWITCH_ENABLE, INPUT);
+  pinMode(KILL_SWITCH, INPUT);
   pinMode(GO_BUTTON, INPUT);
 }
 
@@ -104,7 +104,7 @@ void loop() {
   if (digitalRead(GO_BUTTON) == HIGH) {
     cycles = 3;
   }
-  if (digitalRead(SWITCH_ENABLE) == HIGH && cycles > 0) {
+  if (digitalRead(KILL_SWITCH) == HIGH && cycles > 0) {
     checkAndGo();
   } else {
     if (running) stop();
