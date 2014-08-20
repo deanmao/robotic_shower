@@ -93,11 +93,10 @@ void checkAndGo() {
 void go() {
   if (direction == CW) {
     motor.run(FWD, 1000);
-    running = 1;
   } else {
     motor.run(REV, 1000);
-    running = 1;
   }
+  running = 1;
 }
 
 void loop() {
