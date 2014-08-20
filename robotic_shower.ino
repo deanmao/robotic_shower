@@ -19,6 +19,8 @@ int cycles = 0;
 
 void setup()
 {
+  // These config variables are from the example library code:
+  //
   motor.configSyncPin(BUSY_PIN, 0);// BUSY pin low during operations;
                                     //  second paramter ignored.
   motor.configStepMode(STEP_FS);   // 0 microsteps per step
@@ -42,8 +44,11 @@ void setup()
   motor.setDecKVAL(255);
   motor.setRunKVAL(255);
   motor.setHoldKVAL(32);           // This controls the holding current; keep it low.
+
+  // Disable the use of the reset pin because we don't care
   motor.resetDev();
 
+  // Setup the input pins
   pinMode(CW_LIMIT, INPUT);
   pinMode(CCW_LIMIT, INPUT);
   pinMode(SWITCH_ENABLE, INPUT);
