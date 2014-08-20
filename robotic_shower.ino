@@ -1,10 +1,12 @@
 #include <AutoDriver.h>
+#include <Servo.h>
 
 // Pins:
 #define CW_LIMIT 4
 #define CCW_LIMIT 5
 #define KILL_SWITCH 3
 #define GO_BUTTON 2
+#define SERVO_PIN 7
 
 // Constants:
 #define CW 1
@@ -12,6 +14,7 @@
 
 // Variables:
 AutoDriver motor(10, 6);
+Servo triggerServo;
 int direction = CW;
 int running = 1;
 int spraying = 0;
@@ -53,6 +56,7 @@ void setup()
   pinMode(CCW_LIMIT, INPUT);
   pinMode(KILL_SWITCH, INPUT);
   pinMode(GO_BUTTON, INPUT);
+  triggerServo.attach(SERVO_PIN);
 }
 
 void stop() {
@@ -63,14 +67,20 @@ void stop() {
 
 void spray() {
   if (!spraying) {
-    // Add code to turn on pressure washer wand
+    for(int pos = 0; pos < 180; pos += 1) {
+      triggerServo.write(pos);
+      delay(15);
+    }
     spraying = 1;
   }
 }
 
 void stopSpraying() {
   if (spraying) {
-    // Add code to turn off pressure washer wand
+    for(int pos = 180; pos >= 1; pos -= 1) {
+      triggerServo.write(pos);
+      delay(15);
+    }
     spraying = 0;
   }
 }
