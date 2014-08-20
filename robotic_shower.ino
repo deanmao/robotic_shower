@@ -79,12 +79,16 @@ void checkAndGo() {
   if (digitalRead(CCW_LIMIT) == HIGH) {
     direction = CW;
     if (running) stop();
+    go();
     cycles--;
+    delay(1000);  // hopefully enough time to move away from switch
   }
   if (digitalRead(CW_LIMIT) == HIGH) {
     direction = CCW;
     if (running) stop();
+    go();
     cycles--;
+    delay(1000);  // hopefully enough time to move away from switch
   }
   if (!spraying) spray();
   if (!running) go();
