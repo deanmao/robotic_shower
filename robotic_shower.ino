@@ -65,13 +65,13 @@ void stop() {
 
 void spray() {
   if (!spraying) {
-    analogWrite(SERVO_PIN, 0);
+    analogWrite(SERVO_PIN, 140);
     spraying = 1;
   }
 }
 
 void stopSpraying() {
-  analogWrite(SERVO_PIN, 250);
+  analogWrite(SERVO_PIN, 240);
   spraying = 0;
 }
 
