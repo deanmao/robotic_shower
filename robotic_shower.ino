@@ -1,20 +1,18 @@
 #include <AutoDriver.h>
-#include <Servo.h>
 
 // Pins:
-#define CW_LIMIT 4
-#define CCW_LIMIT 5
-#define KILL_SWITCH 3
-#define GO_BUTTON 2
-#define SERVO_PIN 7
+#define SERVO_PIN 3
+#define CW_LIMIT 7
+#define CCW_LIMIT 6
+#define KILL_SWITCH 5
+#define GO_BUTTON 4
 
 // Constants:
 #define CW 1
 #define CCW 0
 
 // Variables:
-AutoDriver motor(10, 6);
-Servo triggerServo;
+AutoDriver motor(9, 10);
 int direction = CW;
 int running = 1;
 int spraying = 0;
@@ -22,6 +20,7 @@ int cycles = 0;
 
 void setup()
 {
+  pinMode(SERVO_PIN, OUTPUT);
   // These config variables are from the example library code:
   //
   motor.configSyncPin(BUSY_PIN, 0);// BUSY pin low during operations;
@@ -56,7 +55,6 @@ void setup()
   pinMode(CCW_LIMIT, INPUT);
   pinMode(KILL_SWITCH, INPUT);
   pinMode(GO_BUTTON, INPUT);
-  triggerServo.attach(SERVO_PIN);
 }
 
 void stop() {
@@ -67,25 +65,18 @@ void stop() {
 
 void spray() {
   if (!spraying) {
-    for(int pos = 0; pos < 180; pos += 1) {
-      triggerServo.write(pos);
-      delay(15);
-    }
+    analogWrite(SERVO_PIN, 0);
     spraying = 1;
   }
 }
 
 void stopSpraying() {
-  if (spraying) {
-    for(int pos = 180; pos >= 1; pos -= 1) {
-      triggerServo.write(pos);
-      delay(15);
-    }
-    spraying = 0;
-  }
+  analogWrite(SERVO_PIN, 250);
+  spraying = 0;
 }
 
 void checkAndGo() {
+  spray();
   if (digitalRead(CCW_LIMIT) == HIGH) {
     direction = CW;
     cycles--;
@@ -100,26 +91,27 @@ void checkAndGo() {
     go();
     delay(1000);  // hopefully enough time to move away from switch
   }
-  if (!spraying) spray();
   if (!running) go();
 }
 
 void go() {
-  if (direction == CW) {
-    motor.run(FWD, 1000);
+  if (direction == CW) { 
+    motor.run(FWD, 300);
   } else {
-    motor.run(REV, 1000);
+    motor.run(REV, 300);
   }
   running = 1;
 }
 
-void loop() {
+void loop() {       
   if (digitalRead(GO_BUTTON) == HIGH) {
+    delay(500);
     cycles = 3;
   }
   if (digitalRead(KILL_SWITCH) == HIGH && cycles > 0) {
     checkAndGo();
   } else {
+    cycles = 0;
     if (running) stop();
     if (spraying) stopSpraying();
   }
